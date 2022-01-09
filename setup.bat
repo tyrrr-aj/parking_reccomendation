@@ -1,0 +1,2 @@
+python "%SUMO_HOME%\tools\osmGet.py" --bbox "19.9,50.0635,19.9254,50.0706" --output-dir . --prefix agh
+python "%SUMO_HOME%tools\osmBuild.py" --osm-file agh_bbox.osm.xml --netconvert-typemap "%SUMO_HOME%data\typemap\osmNetconvert.typ.xml" --typemap "%SUMO_HOME%data\typemap\osmPolyconvert.typ.xml" --output-dir .
