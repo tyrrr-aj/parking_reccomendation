@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<weights>
+    <factor id="globalFreeSlotsAvailability">
+        <level id="very_low" upperThreshold="0.1">
+            <weight id="totalTime" value="0.1"/>
+            <weight id="walkingTime" value="0.1"/>
+            <weight id="probOfSuccess" value="0.8"/>
+        </level>
+        <level id="low" upperThreshold="0.3">
+            <weight id="totalTime" value="0.2"/>
+            <weight id="walkingTime" value="0.2"/>
+            <weight id="probOfSuccess" value="0.6"/>
+        </level>
+        <level id="medium" upperThreshold="0.5">
+            <weight id="totalTime" value="0.33"/>
+            <weight id="walkingTime" value="0.33"/>
+            <weight id="probOfSuccess" value="0.33"/>
+        </level>
+        <level id="high" upperThreshold="1.0">
+            <weight id="totalTime" value="0.45"/>
+            <weight id="walkingTime" value="0.45"/>
+            <weight id="probOfSuccess" value="0.1"/>
+        </level>
+    </factor>
+</weights>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<additional>
+	<parkingArea id="parking_roadside_-44580474#1_0" lane="-44580474#1_0" startPos="0.0" endPos="115.22" roadsideCapacity="23" angle="60.0"/>
+	<parkingArea id="parking_roadside_-44580474#2_0" lane="-44580474#2_0" startPos="0.0" endPos="34.96" roadsideCapacity="6" angle="60.0"/>
+	<parkingArea id="parking_roadside_-44580475#0_0" lane="-44580475#0_0" startPos="0.0" endPos="64.81" roadsideCapacity="12" angle="90.0"/>
+	<parkingArea id="parking_roadside_-44580475#1_0" lane="-44580475#1_0" startPos="0.0" endPos="9.76" roadsideCapacity="1" angle="90.0"/>
+	<parkingArea id="parking_roadside_-44580475#2_0" lane="-44580475#2_0" startPos="0.0" endPos="12.57" roadsideCapacity="2" angle="90.0"/>
+	<parkingArea id="parking_roadside_-242484991#0_0" lane="-242484991#0_0" startPos="0.0" endPos="43.58" roadsideCapacity="8"/>
+	<parkingArea id="parking_roadside_-242484991#2_0" lane="-242484991#2_0" startPos="0.0" endPos="38.15" roadsideCapacity="7"/>
+	<parkingArea id="parking_roadside_-242484991#3_0" lane="-242484991#3_0" startPos="0.0" endPos="4.99" roadsideCapacity="0"/>
+	<parkingArea id="parking_roadside_-707241599_0" lane="-707241599_0" startPos="0.0" endPos="24.23" roadsideCapacity="4" angle="60.0"/>
+	<parkingArea id="parking_roadside_25116428#0_0" lane="25116428#0_0" startPos="0.0" endPos="22.92" roadsideCapacity="4" angle="60.0"/>
+	<parkingArea id="parking_roadside_25116428#1_0" lane="25116428#1_0" startPos="0.0" endPos="77.21" roadsideCapacity="15" angle="60.0"/>
+	<parkingArea id="parking_roadside_240869997_0" lane="240869997_0" startPos="0.0" endPos="91.69" roadsideCapacity="18"/>
+	<parkingArea id="parking_roadside_288028119#0_0" lane="288028119#0_0" startPos="0.0" endPos="136.03" roadsideCapacity="27"/>
+	<parkingArea id="parking_roadside_447662403#0_0" lane="447662403#0_0" startPos="0.0" endPos="13.02" roadsideCapacity="2" angle="60.0"/>
+	<parkingArea id="parking_roadside_447662403#1_0" lane="447662403#1_0" startPos="0.0" endPos="0.97" roadsideCapacity="0" angle="60.0"/>
+	<parkingArea id="parking_roadside_530563583#1_0" lane="530563583#1_0" startPos="0.0" endPos="49.49" roadsideCapacity="9"/>
+	<parkingArea id="parking_roadside_530563583#2_0" lane="530563583#2_0" startPos="0.0" endPos="105.61" roadsideCapacity="21"/>
+	<parkingArea id="parking_aisle_-24345966#0_0" lane="-24345966#0_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-24345966#1_0" lane="-24345966#1_0" startPos="0.0" endPos="59.60" roadsideCapacity="18" angle="90.0"/>
+	<parkingArea id="parking_aisle_24345966#0_0" lane="24345966#0_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_24345966#1_0" lane="24345966#1_0" startPos="0.0" endPos="59.60" roadsideCapacity="18" angle="90.0"/>
+	<parkingArea id="parking_aisle_-25123180#1_0" lane="-25123180#1_0" startPos="0.0" endPos="69.44" roadsideCapacity="21" angle="90.0"/>
+	<parkingArea id="parking_aisle_25123180#1_0" lane="25123180#1_0" startPos="0.0" endPos="76.56" roadsideCapacity="23" angle="90.0"/>
+	<parkingArea id="parking_aisle_-25506715#1_0" lane="-25506715#1_0" startPos="0.0" endPos="61.54" roadsideCapacity="19" angle="90.0"/>
+	<parkingArea id="parking_aisle_25506715#1_0" lane="25506715#1_0" startPos="0.0" endPos="61.54" roadsideCapacity="19" angle="90.0"/>
+	<parkingArea id="parking_aisle_-44580473#1_0" lane="-44580473#1_0" startPos="0.0" endPos="80.68" roadsideCapacity="25" angle="90.0"/>
+	<parkingArea id="parking_aisle_44580473#1_0" lane="44580473#1_0" startPos="0.0" endPos="75.73" roadsideCapacity="23" angle="90.0"/>
+	<parkingArea id="parking_aisle_44580477#0_0" lane="44580477#0_0" startPos="0.0" endPos="46.69" roadsideCapacity="14" angle="90.0"/>
+	<parkingArea id="parking_aisle_44580477#1_0" lane="44580477#1_0" startPos="0.0" endPos="47.69" roadsideCapacity="14" angle="90.0"/>
+	<parkingArea id="parking_aisle_93144337#1_0" lane="93144337#1_0" startPos="0.0" endPos="202.13" roadsideCapacity="63" angle="90.0"/>
+	<parkingArea id="parking_aisle_93144342#1_0" lane="93144342#1_0" startPos="0.0" endPos="65.67" roadsideCapacity="20" angle="90.0"/>
+	<parkingArea id="parking_aisle_-157021412#0_0" lane="-157021412#0_0" startPos="0.0" endPos="88.31" roadsideCapacity="27" angle="90.0"/>
+	<parkingArea id="parking_aisle_-157021412#1_0" lane="-157021412#1_0" startPos="0.0" endPos="46.19" roadsideCapacity="14" angle="90.0"/>
+	<parkingArea id="parking_aisle_157021412#0_0" lane="157021412#0_0" startPos="0.0" endPos="78.08" roadsideCapacity="24" angle="90.0"/>
+	<parkingArea id="parking_aisle_157021412#1_0" lane="157021412#1_0" startPos="0.0" endPos="46.03" roadsideCapacity="14" angle="90.0"/>
+	<parkingArea id="parking_aisle_173537767#0_0" lane="173537767#0_0" startPos="0.0" endPos="71.25" roadsideCapacity="22" angle="90.0"/>
+	<parkingArea id="parking_aisle_173537767#1_0" lane="173537767#1_0" startPos="0.0" endPos="61.43" roadsideCapacity="19" angle="90.0"/>
+	<parkingArea id="parking_aisle_-182292341_0" lane="-182292341_0" startPos="0.0" endPos="190.56" roadsideCapacity="59" angle="90.0"/>
+	<parkingArea id="parking_aisle_208753228#0_0" lane="208753228#0_0" startPos="0.0" endPos="12.74" roadsideCapacity="3" angle="90.0"/>
+	<parkingArea id="parking_aisle_208753228#1_0" lane="208753228#1_0" startPos="0.0" endPos="110.15" roadsideCapacity="34" angle="90.0"/>
+	<parkingArea id="parking_aisle_-209178213_0" lane="-209178213_0" startPos="0.0" endPos="30.08" roadsideCapacity="9" angle="90.0"/>
+	<parkingArea id="parking_aisle_209178213_0" lane="209178213_0" startPos="0.0" endPos="30.08" roadsideCapacity="9" angle="90.0"/>
+	<parkingArea id="parking_aisle_-226286690_0" lane="-226286690_0" startPos="0.0" endPos="22.36" roadsideCapacity="6" angle="90.0"/>
+	<parkingArea id="parking_aisle_226286690_0" lane="226286690_0" startPos="0.0" endPos="22.36" roadsideCapacity="6" angle="90.0"/>
+	<parkingArea id="parking_aisle_-226286692#0_0" lane="-226286692#0_0" startPos="0.0" endPos="2.00" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-226286692#1_0" lane="-226286692#1_0" startPos="0.0" endPos="49.97" roadsideCapacity="15" angle="90.0"/>
+	<parkingArea id="parking_aisle_-226286692#2_0" lane="-226286692#2_0" startPos="0.0" endPos="3.19" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_226286692#0_0" lane="226286692#0_0" startPos="0.0" endPos="2.00" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_226286692#1_0" lane="226286692#1_0" startPos="0.0" endPos="63.06" roadsideCapacity="19" angle="90.0"/>
+	<parkingArea id="parking_aisle_226286692#2_0" lane="226286692#2_0" startPos="0.0" endPos="3.19" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-286755418_0" lane="-286755418_0" startPos="0.0" endPos="39.88" roadsideCapacity="12" angle="90.0"/>
+	<parkingArea id="parking_aisle_286755418_0" lane="286755418_0" startPos="0.0" endPos="39.88" roadsideCapacity="12" angle="90.0"/>
+	<parkingArea id="parking_aisle_-286755419_0" lane="-286755419_0" startPos="0.0" endPos="35.72" roadsideCapacity="11" angle="90.0"/>
+	<parkingArea id="parking_aisle_286755419_0" lane="286755419_0" startPos="0.0" endPos="35.72" roadsideCapacity="11" angle="90.0"/>
+	<parkingArea id="parking_aisle_-286755420_0" lane="-286755420_0" startPos="0.0" endPos="35.68" roadsideCapacity="11" angle="90.0"/>
+	<parkingArea id="parking_aisle_286755420_0" lane="286755420_0" startPos="0.0" endPos="35.68" roadsideCapacity="11" angle="90.0"/>
+	<parkingArea id="parking_aisle_-286755423#0_0" lane="-286755423#0_0" startPos="0.0" endPos="36.32" roadsideCapacity="11" angle="90.0"/>
+	<parkingArea id="parking_aisle_-286755423#1_0" lane="-286755423#1_0" startPos="0.0" endPos="95.00" roadsideCapacity="29" angle="90.0"/>
+	<parkingArea id="parking_aisle_-286755423#2_0" lane="-286755423#2_0" startPos="0.0" endPos="26.90" roadsideCapacity="8" angle="90.0"/>
+	<parkingArea id="parking_aisle_286755423#0_0" lane="286755423#0_0" startPos="0.0" endPos="35.69" roadsideCapacity="11" angle="90.0"/>
+	<parkingArea id="parking_aisle_286755423#1_0" lane="286755423#1_0" startPos="0.0" endPos="88.24" roadsideCapacity="27" angle="90.0"/>
+	<parkingArea id="parking_aisle_286755423#2_0" lane="286755423#2_0" startPos="0.0" endPos="27.33" roadsideCapacity="8" angle="90.0"/>
+	<parkingArea id="parking_aisle_-299910005_0" lane="-299910005_0" startPos="0.0" endPos="59.13" roadsideCapacity="18" angle="90.0"/>
+	<parkingArea id="parking_aisle_-310331218_0" lane="-310331218_0" startPos="0.0" endPos="62.49" roadsideCapacity="19" angle="90.0"/>
+	<parkingArea id="parking_aisle_310331218_0" lane="310331218_0" startPos="0.0" endPos="62.32" roadsideCapacity="19" angle="90.0"/>
+	<parkingArea id="parking_aisle_-323800732#0_0" lane="-323800732#0_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-323800732#2_0" lane="-323800732#2_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-323800732#3_0" lane="-323800732#3_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-323800732#4_0" lane="-323800732#4_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-323800732#5_0" lane="-323800732#5_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-323800732#6_0" lane="-323800732#6_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-323800732#7_0" lane="-323800732#7_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-323800732#8_0" lane="-323800732#8_0" startPos="0.0" endPos="5.83" roadsideCapacity="1" angle="90.0"/>
+	<parkingArea id="parking_aisle_323800732#0_0" lane="323800732#0_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_323800732#2_0" lane="323800732#2_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_323800732#3_0" lane="323800732#3_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_323800732#4_0" lane="323800732#4_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_323800732#5_0" lane="323800732#5_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_323800732#6_0" lane="323800732#6_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_323800732#7_0" lane="323800732#7_0" startPos="0.0" endPos="0.20" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_323800732#8_0" lane="323800732#8_0" startPos="0.0" endPos="5.57" roadsideCapacity="1" angle="90.0"/>
+	<parkingArea id="parking_aisle_-330685754_0" lane="-330685754_0" startPos="0.0" endPos="67.24" roadsideCapacity="21" angle="90.0"/>
+	<parkingArea id="parking_aisle_-338450064#0_0" lane="-338450064#0_0" startPos="0.0" endPos="14.11" roadsideCapacity="4" angle="90.0"/>
+	<parkingArea id="parking_aisle_-338450064#1_0" lane="-338450064#1_0" startPos="0.0" endPos="13.55" roadsideCapacity="4" angle="90.0"/>
+	<parkingArea id="parking_aisle_-338450064#2_0" lane="-338450064#2_0" startPos="0.0" endPos="94.01" roadsideCapacity="29" angle="90.0"/>
+	<parkingArea id="parking_aisle_-338450064#3_0" lane="-338450064#3_0" startPos="0.0" endPos="26.37" roadsideCapacity="8" angle="90.0"/>
+	<parkingArea id="parking_aisle_338450064#0_0" lane="338450064#0_0" startPos="0.0" endPos="14.11" roadsideCapacity="4" angle="90.0"/>
+	<parkingArea id="parking_aisle_338450064#1_0" lane="338450064#1_0" startPos="0.0" endPos="13.55" roadsideCapacity="4" angle="90.0"/>
+	<parkingArea id="parking_aisle_338450064#2_0" lane="338450064#2_0" startPos="0.0" endPos="81.14" roadsideCapacity="25" angle="90.0"/>
+	<parkingArea id="parking_aisle_338450064#3_0" lane="338450064#3_0" startPos="0.0" endPos="19.49" roadsideCapacity="6" angle="90.0"/>
+	<parkingArea id="parking_aisle_-370453646_0" lane="-370453646_0" startPos="0.0" endPos="409.61" roadsideCapacity="128" angle="90.0"/>
+	<parkingArea id="parking_aisle_-396909305_0" lane="-396909305_0" startPos="0.0" endPos="52.48" roadsideCapacity="16" angle="90.0"/>
+	<parkingArea id="parking_aisle_396909305_0" lane="396909305_0" startPos="0.0" endPos="43.43" roadsideCapacity="13" angle="90.0"/>
+	<parkingArea id="parking_aisle_-425169173_0" lane="-425169173_0" startPos="0.0" endPos="2.92" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_425169173_0" lane="425169173_0" startPos="0.0" endPos="2.92" roadsideCapacity="0" angle="90.0"/>
+	<parkingArea id="parking_aisle_-425169174_0" lane="-425169174_0" startPos="0.0" endPos="4.10" roadsideCapacity="1" angle="90.0"/>
+	<parkingArea id="parking_aisle_425169174_0" lane="425169174_0" startPos="0.0" endPos="4.10" roadsideCapacity="1" angle="90.0"/>
+	<parkingArea id="parking_aisle_-425169176_0" lane="-425169176_0" startPos="0.0" endPos="8.18" roadsideCapacity="2" angle="90.0"/>
+	<parkingArea id="parking_aisle_425169176_0" lane="425169176_0" startPos="0.0" endPos="8.18" roadsideCapacity="2" angle="90.0"/>
+	<parkingArea id="parking_aisle_-837047244#0_0" lane="-837047244#0_0" startPos="0.0" endPos="29.53" roadsideCapacity="9" angle="90.0"/>
+	<parkingArea id="parking_aisle_-837047244#1_0" lane="-837047244#1_0" startPos="0.0" endPos="21.42" roadsideCapacity="6" angle="90.0"/>
+	<parkingArea id="parking_aisle_837047244#0_0" lane="837047244#0_0" startPos="0.0" endPos="29.53" roadsideCapacity="9" angle="90.0"/>
+	<parkingArea id="parking_aisle_837047244#1_0" lane="837047244#1_0" startPos="0.0" endPos="30.27" roadsideCapacity="9" angle="90.0"/>
+</additional>

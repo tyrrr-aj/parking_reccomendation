@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 10/08/20 16:34:46 by Eclipse SUMO GUI Version 1.7.0
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="osm.net.xml"/>
+        <route-files>
+            agh.random.trips.xml
+        </route-files>
+        <additional-files>
+            osm.poly.xml,
+            parkings.add.xml
+        </additional-files>
+    </input>
+
+    <processing>
+        <ignore-route-errors value="true"/>
+        <time-to-teleport value="30"/>
+        <time-to-teleport.disconnected value="10"/>
+    </processing>
+
+    <routing>
+        <device.rerouting.adaptation-steps value="180"/>
+    </routing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <gui_only>
+        <!-- <gui-settings-file value="C:\Users\adams\Projekty\SumoLearning\Cracow_center\osm.view.xml"/> -->
+    </gui_only>
+
+</configuration>

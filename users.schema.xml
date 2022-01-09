@@ -1,0 +1,21 @@
+<!-- 
+
+<?xml version.../>
+
+<users>
+    <user id="1">
+        <trips>
+            <trip id="usr1_0" time="80000" target="lat,lon"/>
+            <trip id="usr1_1" time="80000" target="lat,lon"/>
+        </trips>
+        <calendar>
+            <event day="Mon" time="8000" place="A0"/>
+            <event day="Mon" time="8000" place="A0"/>
+        </calendar>
+    </user>
+    <user id="2">
+        ...
+    </user>
+</users>
+
+ -->
