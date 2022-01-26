@@ -5,6 +5,7 @@ import traci
 from traci.exceptions import FatalTraCIError, TraCIException
 from lxml import etree as ET
 import os
+import psycopg2
 
 
 sumo_rel_path = 'sumo'
@@ -33,7 +34,45 @@ class ParkingAdvisor:
 
 
     def suggest_targets(self, vehicle):
-        return []
+        ...
+        # loc = self._get_user_localization(vehicle)
+	
+        # target_sets = {
+        #     'nearby_targets': self._get_nearby_targets(loc),
+        #     'calendar_targets': self._get_calendar_targets(vehicle),
+        #     'frequent_targets': self._get_frequent_targets(vehicle),
+        #     'repeating_targets': self._get_repeating_targets(vehicle)
+        # }
+        
+        # extract_bare_targets = lambda target_set: map(lambda t: t.target, target_set)
+        # targets = sum(map(extract_bare_targets, target_sets.values()))
+        
+        # ordered_targets = sorted(targets, key=lambda target: self._confidence(target))
+        # return ordered_targets
+
+
+    def _get_user_localization(self, vehicle):
+        ...
+
+
+    def _get_nearby_targets(self, loc):
+        ...
+
+
+    def _get_calendar_targets(self, vehicle):
+        ...
+
+
+    def _get_frequent_targets(self, vehicle):    
+        ...
+
+
+    def _get_repeating_targets(self, vehicle):
+        ...
+
+
+    def _confidence(self, target):
+        ...
 
 
     def pick_parking_areas(self, vehicle, target):
@@ -56,8 +95,26 @@ class ParkingAdvisor:
 
     
     def _find_nearest_parking_areas(self, target):
-        # TODO: return all parking areas within specified radius
-        return random.choices(self._parking_lots.xpath('./parkingArea'), k=10)
+        n_parking_lots = 10
+
+        try:
+            conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+            cur = conn.cursor()
+
+            sql = 'select id from get_parkings_around_building(%s, %s)'
+            cur.execute(sql, (target, n_parking_lots))
+            nearby_parkings = [p[0] for p in cur.fetchall()]
+            
+            conn.commit()
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            nearby_parkings = []
+        finally:
+            if conn is not None:
+                conn.close()
+
+        return nearby_parkings
 
 
     def _update_contextual_weights(self, vehicle, target):
@@ -123,9 +180,14 @@ class ParkingAdvisor:
 
 
     def _get_free_spots_number(self, parking_area):
-        n_parked_cars = traci.parkingarea.getVehicleCount(parking_area.attrib['id'])
-        capacity = int(parking_area.attrib['roadsideCapacity'])
+        n_parked_cars = traci.parkingarea.getVehicleCount(parking_area)
+        capacity = self._get_parking_area_capacity(parking_area)
         return capacity - n_parked_cars
+
+
+    def _get_parking_area_capacity(self, parking_area_name):
+        parking_area_elem = self._parking_lots.xpath(f'./parkingArea[@id="{parking_area_name}"]')[0]
+        return int(parking_area_elem.attrib['roadsideCapacity'])
 
 
     def _save_user_target(self, vehicle, target):
