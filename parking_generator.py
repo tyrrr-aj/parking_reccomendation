@@ -8,7 +8,7 @@ import psycopg2
 sumo_rel_path = 'sumo'
 
 input_file = os.path.join('generated', 'agh_bbox.osm.xml')
-output_file = os.path.join('generated', 'parkings.add.xml')
+output_file = os.path.join(sumo_rel_path, 'generated', 'parkings.add.xml')
 net_file = os.path.join('generated', 'osm.net.xml')
 random_trips_file = os.path.join('generated', 'agh.random.trips.xml')
 

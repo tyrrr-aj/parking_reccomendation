@@ -15,6 +15,9 @@ output_trips_file = os.path.join('generated', 'users.trips.xml')
 output_users_file = os.path.join('config', 'users.xml')
 
 net_file = os.path.join('generated', 'osm.net.xml')
+parkings_file = os.path.join('generated', 'parkings.add.xml')
+trips_file = os.path.join('generated', 'agh.random.trips.xml')
+buildings_file = os.path.join('config', 'buildings.xml')
 
 encoding = 'UTF-8'
 
@@ -38,17 +41,24 @@ DAY_LEN_SECONDS = 24 * 3600
 
 
 def get_parkings():
-    parking_tree = ET.parse('parkings.add.xml')
+    parking_tree = ET.parse(os.path.join(sumo_rel_path, parkings_file))
     return [p.attrib['id'] for p in parking_tree.xpath('/additional/parkingArea')]
 
 def get_roads():
     osm = ET.parse(os.path.join(sumo_rel_path, net_file))
     return [e.attrib['id'].split(':')[-1] for e in osm.xpath('/net/edge') if not str.startswith(e.attrib['id'], ':cluster') and 'function' not in e.attrib]
 
+def get_buildings():
+    osm = ET.parse(os.path.join(sumo_rel_path, buildings_file))
+    return [e.text for e in osm.xpath('building/name')]
+
 days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-buildings = ['A0', 'A1', 'A2', 'A3', 'A4', 'H-A1', 'H-A2', 'B1', 'B2', 'B3', 'B4', 'H-B1B2', 'H-B3B4', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'D1', 'D2', 'D4', 'S1', 'S2', 'U1', 'U2', 'U3', 'Z2']
+buildings = get_buildings()
 parkings = get_parkings()
 roads = get_roads()
+
+sources = ['277117089', '277117080', '-21094558#7', '558612810#0', '-277424358', '370453642']
+sinks = ['431516755#1', '114324803#3', '21094558#4', '277424367#1', '277424358', '-370453642']
 
 
 def xml_root(root_element_name):
@@ -172,8 +182,8 @@ def prepare_users_trips(users_tree, users_trips_tree):
         trip_el.set('type', 'veh_guided')
         trip_el.set('depart', trip.attrib['time'])
         trip_el.set('departLane', 'best')
-        trip_el.set('from', random.choice(roads))
-        trip_el.set('to', random.choice(roads))
+        trip_el.set('from', random.choice(sources))
+        trip_el.set('to', random.choice(sinks))
 
         stop = ET.SubElement(trip_el, 'stop')
         stop.set('parkingArea', find_parking_area(trip.attrib['target']))
@@ -184,14 +194,14 @@ def prepare_users_trips(users_tree, users_trips_tree):
 
 def main():
     users_tree = xml_root('users')
-    users_trips_tree = ET.parse('agh.random.trips.xml').find('.')
+    users_trips_tree = ET.parse(os.path.join(sumo_rel_path, trips_file)).find('.')
     
     generate_users(users_tree)
     save_output(users_tree, os.path.join(sumo_rel_path, output_users_file))
 
     add_guided_v_type(users_trips_tree)
     prepare_users_trips(users_tree, users_trips_tree)
-    save_output(users_trips_tree, 'agh.random.trips.xml')
+    save_output(users_trips_tree, os.path.join(sumo_rel_path, trips_file))
 
 
 if __name__ == '__main__':
