@@ -4,10 +4,15 @@ import random
 import traci
 from traci.exceptions import FatalTraCIError, TraCIException
 from lxml import etree as ET
+import os
 
+
+sumo_rel_path = 'sumo'
 
 parkings_file = 'parkings.add.xml'
 weights_file = 'weights.xml'
+users_file = 'users.xml'
+users_history_file = 'users.history.xml'
 
 n_propositions = 5
 
@@ -32,6 +37,7 @@ class ParkingAdvisor:
 
 
     def pick_parking_areas(self, vehicle, target):
+        self._save_user_target(vehicle, target)
         parking_areas_nearby = self._find_nearest_parking_areas(target)
         self._update_contextual_weights(vehicle, target)
         reccomended_parking_areas = sorted(parking_areas_nearby, key=lambda parking_area: self._cost(parking_area, vehicle, target))
@@ -39,14 +45,14 @@ class ParkingAdvisor:
 
 
     def _load_parking_lots(self):
-        parking_tree = ET.parse(parkings_file)
+        parking_tree = ET.parse(os.path.join(sumo_rel_path, parkings_file))
         self._parking_lots = parking_tree.xpath('/additional')[0]
         self._all_parking_areas_ids = [parking.attrib['id'] for parking in self._parking_lots.xpath('./parkingArea')]
         self._total_parking_capacity = sum([int(parking.attrib['roadsideCapacity']) for parking in self._parking_lots.xpath('./parkingArea')])
 
     
     def _load_weight_config(self):
-        return ET.parse(weights_file)
+        return ET.parse(os.path.join(sumo_rel_path, weights_file))
 
     
     def _find_nearest_parking_areas(self, target):
@@ -120,3 +126,7 @@ class ParkingAdvisor:
         n_parked_cars = traci.parkingarea.getVehicleCount(parking_area.attrib['id'])
         capacity = int(parking_area.attrib['roadsideCapacity'])
         return capacity - n_parked_cars
+
+
+    def _save_user_target(self, vehicle, target):
+        ...

@@ -1,4 +1,5 @@
 import os, sys, random
+from time import sleep
 import traci
 from traci.exceptions import FatalTraCIError, TraCIException
 from lxml import etree as ET
@@ -14,6 +15,7 @@ else:
 min_stop_time = 200
 max_stop_time = 2000
 
+sumo_rel_path = 'sumo'
 users_file = 'users.xml'
 
 
@@ -50,12 +52,17 @@ def guide_vehicles(advisor, users):
         else:
             print(f'WARNING: Failed to send vehicle {guided_veh} to applicable parking area')
 
+    if new_guided_vehicle_ids:
+        traci.gui.trackVehicle('View #0', new_guided_vehicle_ids[0])
+        traci.gui.setZoom('View #0', 1000)
+        sleep(1)
+
 
 def main():
-    traci.start(['sumo-gui', '-c', 'agh.sumocfg'])
-    # traci.start(['sumo', '-c', 'agh.sumocfg'])
+    traci.start(['sumo-gui', '-c', os.path.join(sumo_rel_path, 'agh.sumocfg')])
+    # traci.start(['sumo', '-c', os.path.join(sumo_rel_path, 'agh.sumocfg')])
 
-    users = ET.parse(users_file)
+    users = ET.parse(os.path.join(sumo_rel_path, users_file))
 
     advisor = ParkingAdvisor()
     step = 0

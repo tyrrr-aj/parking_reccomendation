@@ -19,7 +19,7 @@
     <processing>
         <ignore-route-errors value="true"/>
         <time-to-teleport value="30"/>
-        <time-to-teleport.disconnected value="10"/>
+        <time-to-teleport.disconnected value="1"/>
     </processing>
 
     <routing>

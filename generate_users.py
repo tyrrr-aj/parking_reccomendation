@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from lxml import etree as ET
 import xml.dom.minidom
 import random
@@ -8,6 +8,8 @@ from parking_generator import save_output
 
 n_weeks = 1
 n_users = 100
+
+sumo_rel_path = 'sumo'
 
 output_trips_file = 'users.trips.xml'
 output_users_file = 'users.xml'
@@ -40,7 +42,7 @@ def get_parkings():
     return [p.attrib['id'] for p in parking_tree.xpath('/additional/parkingArea')]
 
 def get_roads():
-    osm = ET.parse(net_file)
+    osm = ET.parse(os.path.join(sumo_rel_path, net_file))
     return [e.attrib['id'].split(':')[-1] for e in osm.xpath('/net/edge') if not str.startswith(e.attrib['id'], ':cluster') and 'function' not in e.attrib]
 
 days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -185,7 +187,7 @@ def main():
     users_trips_tree = ET.parse('agh.random.trips.xml').find('.')
     
     generate_users(users_tree)
-    save_output(users_tree, output_users_file)
+    save_output(users_tree, os.path.join(sumo_rel_path, output_users_file))
 
     add_guided_v_type(users_trips_tree)
     prepare_users_trips(users_tree, users_trips_tree)
