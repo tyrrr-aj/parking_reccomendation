@@ -16,7 +16,7 @@ min_stop_time = 200
 max_stop_time = 2000
 
 sumo_rel_path = 'sumo'
-users_file = 'users.xml'
+users_file = os.path.join('config', 'users.xml')
 
 
 def evaluate_target_suggestions(true_target, suggested_targets):
@@ -59,8 +59,8 @@ def guide_vehicles(advisor, users):
 
 
 def main():
-    traci.start(['sumo-gui', '-c', os.path.join(sumo_rel_path, 'agh.sumocfg')])
-    # traci.start(['sumo', '-c', os.path.join(sumo_rel_path, 'agh.sumocfg')])
+    traci.start(['sumo-gui', '-c', os.path.join(sumo_rel_path, 'config', 'agh.sumocfg')])
+    # traci.start(['sumo', '-c', os.path.join(sumo_rel_path, 'config', 'agh.sumocfg')])
 
     users = ET.parse(os.path.join(sumo_rel_path, users_file))
 

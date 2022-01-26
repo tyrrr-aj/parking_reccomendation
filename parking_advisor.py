@@ -9,10 +9,10 @@ import os
 
 sumo_rel_path = 'sumo'
 
-parkings_file = 'parkings.add.xml'
-weights_file = 'weights.xml'
-users_file = 'users.xml'
-users_history_file = 'users.history.xml'
+parkings_file = os.path.join('generated', 'parkings.add.xml')
+weights_file = os.path.join('config', 'weights.xml')
+users_file = os.path.join('config', 'users.xml')
+users_history_file = os.path.join('generated', 'users.history.xml')
 
 n_propositions = 5
 

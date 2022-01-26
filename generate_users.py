@@ -11,10 +11,10 @@ n_users = 100
 
 sumo_rel_path = 'sumo'
 
-output_trips_file = 'users.trips.xml'
-output_users_file = 'users.xml'
+output_trips_file = os.path.join('generated', 'users.trips.xml')
+output_users_file = os.path.join('config', 'users.xml')
 
-net_file = 'osm.net.xml'
+net_file = os.path.join('generated', 'osm.net.xml')
 
 encoding = 'UTF-8'
 

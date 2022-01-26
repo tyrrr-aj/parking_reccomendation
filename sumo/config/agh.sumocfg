@@ -6,13 +6,13 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="osm.net.xml"/>
+        <net-file value="../generated/osm.net.xml"/>
         <route-files>
-            agh.random.trips.xml
+            ../generated/agh.random.trips.xml
         </route-files>
         <additional-files>
-            osm.poly.xml,
-            parkings.add.xml
+            ../generated/osm.poly.xml,
+            ../generated/parkings.add.xml
         </additional-files>
     </input>
 
