@@ -2,6 +2,7 @@ import sys, os
 from lxml import etree as ET
 import xml.dom.minidom
 import random
+import psycopg2
 
 from parking_generator import save_output
 
@@ -99,8 +100,26 @@ def fill_random_calendar(calendar):
         time += random.randint(min_time_between_events, 3600 * (max_event_hour - min_event_hour))
 
 
-def find_parking_area(target=None):
-    return random.choice(parkings)
+def find_parking_area(target):
+    try:
+        conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+        cur = conn.cursor()
+
+        sql = 'select id from get_parkings_around_building(%s, %s)'
+
+        cur.execute(sql, (target, 5))
+        nearby_parkings = [p[0] for p in cur.fetchall()]
+        
+        conn.commit()
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        nearby_parkings = random.choices(parkings, k=5)
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return random.choice(nearby_parkings)
 
 
 def event_absolute_time(event, week):
