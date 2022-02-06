@@ -3,6 +3,7 @@
 <users>
 	<user id="0">
 		<calendar>
+			<event day="Mon" time="200" place="D4"/>
 			<event day="Mon" time="61557" place="D4"/>
 			<event day="Tue" time="40382" place="C1"/>
 			<event day="Wed" time="58854" place="D4"/>
@@ -16,6 +17,7 @@
 			<event day="Sun" time="63724" place="C4"/>
 		</calendar>
 		<trips>
+			<trip id="usr0_20" time="80" target="D4"/>
 			<trip id="usr0_13" time="60476" target="C2"/>
 			<trip id="usr0_0" time="61902" target="D4"/>
 			<trip id="usr0_11" time="119301" target="C2"/>

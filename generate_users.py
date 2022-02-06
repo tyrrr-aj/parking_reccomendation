@@ -5,20 +5,20 @@ import random
 import psycopg2
 
 from parking_generator import save_output
+from constants import *
 
 
 n_weeks = 1
 n_users = 100
 
-sumo_rel_path = 'sumo'
 
-output_trips_file = os.path.join('generated', 'users.trips.xml')
-output_users_file = os.path.join('config', 'users.xml')
+output_trips_file = os.path.join(sumo_rel_path, gen_subdir, users_trips_filename)
+output_users_file = os.path.join(sumo_rel_path, config_subdir, users_conf_filename)
 
-net_file = os.path.join('generated', 'osm.net.xml')
-parkings_file = os.path.join('generated', 'parkings.add.xml')
-trips_file = os.path.join('generated', 'agh.random.trips.xml')
-buildings_file = os.path.join('config', 'buildings.xml')
+net_file = os.path.join(sumo_rel_path, gen_subdir, net_gen_filename)
+parkings_file = os.path.join(sumo_rel_path, gen_subdir, parkings_gen_filename)
+trips_file = os.path.join(sumo_rel_path, gen_subdir, all_trips_gen_filename)
+buildings_file = os.path.join(sumo_rel_path, config_subdir, buildings_filename)
 
 encoding = 'UTF-8'
 
@@ -37,20 +37,17 @@ time_delta = 900
 min_stop_time = 500
 max_stop_time = 2000
 
-WEEK_LEN_SECONDS = 7 * 24 * 3600
-DAY_LEN_SECONDS = 24 * 3600
-
 
 def get_parkings():
-    parking_tree = ET.parse(os.path.join(sumo_rel_path, parkings_file))
+    parking_tree = ET.parse(parkings_file)
     return [p.attrib['id'] for p in parking_tree.xpath('/additional/parkingArea')]
 
 def get_roads():
-    osm = ET.parse(os.path.join(sumo_rel_path, net_file))
+    osm = ET.parse(net_file)
     return [e.attrib['id'].split(':')[-1] for e in osm.xpath('/net/edge') if not str.startswith(e.attrib['id'], ':cluster') and 'function' not in e.attrib]
 
 def get_buildings():
-    osm = ET.parse(os.path.join(sumo_rel_path, buildings_file))
+    osm = ET.parse(buildings_file)
     return [e.text for e in osm.xpath('building/name')]
 
 days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -213,14 +210,14 @@ def prepare_users_trips(users_tree, users_trips_tree):
 
 def main():
     users_tree = xml_root('users')
-    users_trips_tree = ET.parse(os.path.join(sumo_rel_path, trips_file)).find('.')
+    users_trips_tree = ET.parse(trips_file).find('.')
     
     generate_users(users_tree)
-    save_output(users_tree, os.path.join(sumo_rel_path, output_users_file))
+    save_output(users_tree, output_users_file)
 
     add_guided_v_type(users_trips_tree)
     prepare_users_trips(users_tree, users_trips_tree)
-    save_output(users_trips_tree, os.path.join(sumo_rel_path, trips_file))
+    save_output(users_trips_tree, trips_file)
 
 
 if __name__ == '__main__':

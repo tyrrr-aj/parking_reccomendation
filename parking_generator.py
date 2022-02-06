@@ -5,12 +5,13 @@ import random
 import psycopg2
 
 
-sumo_rel_path = 'sumo'
+from constants import *
 
-input_file = os.path.join('generated', 'agh_bbox.osm.xml')
-output_file = os.path.join(sumo_rel_path, 'generated', 'parkings.add.xml')
-net_file = os.path.join('generated', 'osm.net.xml')
-random_trips_file = os.path.join('generated', 'agh.random.trips.xml')
+
+input_file = os.path.join(sumo_rel_path, gen_subdir, map_filename)
+output_file = os.path.join(sumo_rel_path, gen_subdir, parkings_gen_filename)
+net_file = os.path.join(sumo_rel_path, gen_subdir, net_gen_filename)
+random_trips_file = os.path.join(sumo_rel_path, gen_subdir, all_trips_gen_filename)
 
 encoding = 'UTF-8'
 
@@ -18,10 +19,10 @@ vehicle_length = 5.0    # in meters
 space_width = 3.2   # in meters
 space_length = 5.5  # in meters
 
-min_stop_time = 500
-max_stop_time = 2000
+min_stop_time = 500 # in seconds
+max_stop_time = 2000 # in seconds
 stopping_rate = 1
-time_base = 3600
+time_base = 3600 # in seconds
 
 n_guided_vehicles = 500
 
@@ -174,9 +175,9 @@ def pick_guided_vehicles(trips_tree):
 
 def main():
     output_tree = output_core()
-    input_tree = ET.parse(os.path.join(sumo_rel_path, input_file))
-    net_tree = ET.parse(os.path.join(sumo_rel_path, net_file))
-    trips_tree = ET.parse(os.path.join(sumo_rel_path, random_trips_file))
+    input_tree = ET.parse(input_file)
+    net_tree = ET.parse(net_file)
+    trips_tree = ET.parse(random_trips_file)
 
     add_parkings_along_roads(input_tree, net_tree, output_tree)
     add_standalone_parkings(input_tree, net_tree, output_tree)
@@ -189,7 +190,7 @@ def main():
     # pick_guided_vehicles(trips_tree)
 
     save_output(output_tree)
-    save_output(trips_tree, output=os.path.join(sumo_rel_path, random_trips_file))
+    save_output(trips_tree, output=random_trips_file)
 
 
 if __name__ == '__main__':

@@ -1,16 +1,17 @@
-import sys, os
+import imp
+import os
 from lxml import etree as ET
 import psycopg2
 
 
-sumo_rel_path = 'sumo'
+from constants import *
 
-buildings_file = os.path.join(sumo_rel_path, 'config', 'buildings.xml')
+buildings_file = os.path.join(sumo_rel_path, config_subdir, buildings_filename)
 
 
 def get_buildings():
-    osm = ET.parse(os.path.join(sumo_rel_path, buildings_file))
-    return [tuple([n.text for n in e.getchildren()]) for e in osm.xpath('building')]
+    buildings_tree = ET.parse(buildings_file)
+    return [tuple([n.text for n in e.getchildren()]) for e in buildings_tree.xpath('/buildings/building')]
 
 
 def load_buildings_to_db(buildings):
@@ -18,7 +19,10 @@ def load_buildings_to_db(buildings):
         conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
         cur = conn.cursor()
 
-        sql = 'DELETE FROM buildings; INSERT INTO buildings(name, lon, lat) VALUES(%s, %s, %s)'
+        sql = 'DELETE FROM buildings; '
+        cur.execute(sql)
+
+        sql = 'INSERT INTO buildings(name, lon, lat) VALUES(%s, %s, %s)'
         cur.executemany(sql, buildings)
         
         conn.commit()
