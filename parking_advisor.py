@@ -1,9 +1,8 @@
+from audioop import avg
 from math import exp, sqrt
 import math
 from functools import reduce
-from scipy import stats
 import traci
-from traci.exceptions import FatalTraCIError, TraCIException
 from lxml import etree as ET
 import os
 import psycopg2
@@ -33,8 +32,9 @@ def sigmoid_star(x):
 
 
 class ParkingAdvisor:
-    def __init__(self, time_controller):
+    def __init__(self, time_controller, environment):
         self._time_controller = time_controller
+        self._environment = environment
 
         self._load_parking_lots()
         self._load_users()
@@ -43,6 +43,8 @@ class ParkingAdvisor:
 
     def suggest_targets(self, vehicle):
         self._invalidate_eta_cache()
+        self.context = {}
+
         self._loc = self._get_user_localization(vehicle)
 	
         target_sets = {
@@ -198,32 +200,30 @@ class ParkingAdvisor:
 
 
     def _confidence_nearby(self, target, target_set):
-        conf = BASE_CONF_NEARBY * target_set[target] / MAX_DIST_NEARBY_METERS if target in target_set else 0.0
-        # print(f'conf_n: {conf}')
-        return conf
+        return BASE_CONF_NEARBY * target_set[target] / MAX_DIST_NEARBY_METERS if target in target_set else 0.0
+
+
+    def _confidence_calendar_single(self, eta_time_of_week, time_of_week):
+        return BASE_CONF_CALENDAR * gaussian(eta_time_of_week - time_of_week)
 
 
     def _confidence_calendar(self, target, target_set):
         eta_time_of_week = self._time_controller.time_of_week_from_sim(self._eta(target))
-        conf = sum([BASE_CONF_CALENDAR * gaussian(eta_time_of_week - time_of_week) for tar, time_of_week in target_set if tar == target])
-        # print(f'conf_c: {conf}')
-        return conf
+        return sum([self._confidence_calendar_single(eta_time_of_week, time_of_week) for tar, time_of_week in target_set if tar == target])
 
 
     def _confidence_frequent(self, target, target_set):
-        conf = BASE_CONF_FREQUENT * sigmoid(sum([sigmoid_star(self._time_controller.curr_global_time() - absolute_time) for tar, absolute_time in target_set if tar == target]))
-        # print(f'conf_f: {conf}')
-        return conf
+        return BASE_CONF_FREQUENT * sigmoid(sum([sigmoid_star(self._time_controller.curr_global_time() - absolute_time) for tar, absolute_time in target_set if tar == target]))
 
 
     def _confidence_repeating(self, target, target_set):
         eta = self._time_controller.time_of_week_from_sim(self._eta(target))
-        conf = BASE_CONF_REPEATING * sigmoid(sum([sqrt(sigmoid_star(self._time_controller.curr_global_time() - absolute_time) * gaussian(eta - time_of_week)) for tar, time_of_week, absolute_time in target_set if tar == target]))
-        # print(f'conf_r: {conf}')
-        return conf
+        return BASE_CONF_REPEATING * sigmoid(sum([sqrt(sigmoid_star(self._time_controller.curr_global_time() - absolute_time) * gaussian(eta - time_of_week)) for tar, time_of_week, absolute_time in target_set if tar == target]))
 
 
     def pick_parking_areas(self, vehicle, target):
+        self.costs = {}
+
         self._save_user_target(vehicle, target)
         parking_areas_nearby = self._find_nearest_parking_areas(target)
         self._update_contextual_weights(vehicle, target)
@@ -286,14 +286,24 @@ class ParkingAdvisor:
     def _update_contextual_weights(self, vehicle, target):
         """ Sets weights tailored to a specific query based on context. """
         weights_by_individual_factors = [
-            self._weights_by_global_free_slots_ratio()
+            self._weights_by_weather(),
+            self._weights_by_global_free_slots_ratio(),
+            self._weights_by_time_to_event(target),
+            self._weights_by_air_quality()
         ]
-        summed_weights = reduce(lambda acc, weights: [sum(w) for w in zip(acc, weights)], weights_by_individual_factors, [0, 0, 0])
+
+        applicable_weights = filter(lambda weights: weights is not None, weights_by_individual_factors)
+
+        summed_weights = reduce(lambda acc, weights: [sum(w) for w in zip(acc, weights)], applicable_weights, [0, 0, 0])
         mean_weights = [w / len(weights_by_individual_factors[0]) for w in summed_weights]
         
-        self._weight_time = mean_weights[0]
-        self._weight_walking = mean_weights[1]
-        self._weight_prob = mean_weights[2]
+        self.weight_time = mean_weights[0]
+        self.weight_walking = mean_weights[1]
+        self.weight_prob = mean_weights[2]
+
+
+    def _weights_by_weather(self):
+        return self._weights_by_factor('weather', self._environment.weather)
 
 
     def _weights_by_global_free_slots_ratio(self):
@@ -302,7 +312,36 @@ class ParkingAdvisor:
         return self._weights_by_factor('globalFreeSlotsAvailability', global_free_slots_ratio)
 
 
+    def _weights_by_time_to_event(self, target):
+        event_confidence = 0.
+        time_to_event = None
+
+        for tar, time_of_week in self._last_target_sets['calendar_targets']:
+            if tar == target:
+                eta_time_of_week = self._time_controller.time_of_week_from_sim(self._eta(target))
+                conf = self._confidence_calendar_single(eta_time_of_week, time_of_week)
+                if conf > event_confidence and conf > BASE_CONF_CALENDAR / 2:
+                    event_confidence = conf
+                    time_to_event = eta_time_of_week - time_of_week
+
+        if target in (t[0] for t in self._last_target_sets['repeating_targets']):
+            conf = self._confidence_repeating(target, self._last_target_sets['repeating_targets'])
+            if conf > event_confidence and conf > BASE_CONF_REPEATING / 2:
+                mean_time_of_week = avg([time_of_week for tar, time_of_week, _ in self._last_target_sets['repeating_targets'] if tar == target])
+                
+                event_confidence = conf
+                time_to_event = self._time_controller.curr_time_of_week() - mean_time_of_week
+
+        return self._weights_by_factor('timeToEvent', time_to_event) if time_to_event is not None else None
+
+
+    def _weights_by_air_quality(self):
+        return self._weights_by_factor('airQuality', self._environment.air_quality)
+
+
     def _weights_by_factor(self, factor, value):
+        self.context[factor] = value
+
         levels = self._weight_config.xpath(f'/weights/factor[@id="{factor}"]/level')
         ordered_lvls = sorted(levels, key=lambda lvl: float(lvl.attrib['upperThreshold']))
         applicable_level = [lvl for lvl in ordered_lvls if float(lvl.attrib['upperThreshold']) >= value][0]
@@ -318,13 +357,12 @@ class ParkingAdvisor:
         time_total = self._get_time_total(parking_area, target, vehicle)
         time_walking = self._get_time_walking(parking_area, target)
         prob_of_success = self._get_prob_of_success(parking_area, vehicle)
-        print(f'\nParking area {parking_area}:')
-        print(f'time_total: {time_total}')
-        print(f'time_walking: {time_walking}')
-        print(f'prob_of_success: {prob_of_success}')
-        return self._weight_time * min(time_total / MAX_TIME_TOTAL, 1.) + \
-               self._weight_walking * min(time_walking / MAX_TIME_WALKING, 1.) + \
-               self._weight_prob * prob_of_success
+        total = self.weight_time * min(time_total / MAX_TIME_TOTAL, 1.) + \
+               self.weight_walking * min(time_walking / MAX_TIME_WALKING, 1.) + \
+               self.weight_prob * prob_of_success
+
+        self.costs[parking_area] = (time_total, time_walking, prob_of_success, total)
+        return total
 
     
     def _get_time_total(self, parking_area, target, vehicle):
@@ -374,7 +412,7 @@ class ParkingAdvisor:
             conn = psycopg2.connect(conn_string)
             cur = conn.cursor()
 
-            sql = 'select estimated_walking_time(%s, %s, %s)'
+            sql = 'select estimated_driving_time(%s, %s, %s)'
             cur.execute(sql, (parking_area, *self._loc))
             time_driving = cur.fetchall()[0][0]
             

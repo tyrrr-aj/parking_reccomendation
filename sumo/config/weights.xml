@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <weights>
+    <factor id="weather">
+        <level id="terrible" upperThreshold="0.1">
+            <weight id="totalTime" value="0.05"/>
+            <weight id="walkingTime" value="0.9"/>
+            <weight id="probOfSuccess" value="0.05"/>
+        </level>
+        <level id="bad" upperThreshold="0.3">
+            <weight id="totalTime" value="0.15"/>
+            <weight id="walkingTime" value="0.7"/>
+            <weight id="probOfSuccess" value="0.15"/>
+        </level>
+        <level id="moderate" upperThreshold="0.6">
+            <weight id="totalTime" value="0.33"/>
+            <weight id="walkingTime" value="0.33"/>
+            <weight id="probOfSuccess" value="0.33"/>
+        </level>
+        <level id="good" upperThreshold="1.0">
+            <weight id="totalTime" value="0.4"/>
+            <weight id="walkingTime" value="0.2"/>
+            <weight id="probOfSuccess" value="0.4"/>
+        </level>
+    </factor>
     <factor id="globalFreeSlotsAvailability">
         <level id="very_low" upperThreshold="0.1">
             <weight id="totalTime" value="0.1"/>
@@ -21,6 +43,50 @@
             <weight id="totalTime" value="0.45"/>
             <weight id="walkingTime" value="0.45"/>
             <weight id="probOfSuccess" value="0.1"/>
+        </level>
+    </factor>
+    <factor id="timeToEvent">
+        <level id="late" upperThreshold="0">
+            <weight id="totalTime" value="0.85"/>
+            <weight id="walkingTime" value="0.05"/>
+            <weight id="probOfSuccess" value="0.2"/>
+        </level>
+        <level id="low" upperThreshold="300">
+            <weight id="totalTime" value="0.65"/>
+            <weight id="walkingTime" value="0.05"/>
+            <weight id="probOfSuccess" value="0.3"/>
+        </level>
+        <level id="medium" upperThreshold="900">
+            <weight id="totalTime" value="0.33"/>
+            <weight id="walkingTime" value="0.33"/>
+            <weight id="probOfSuccess" value="0.33"/>
+        </level>
+        <level id="high" upperThreshold="3600">
+            <weight id="totalTime" value="0.2"/>
+            <weight id="walkingTime" value="0.4"/>
+            <weight id="probOfSuccess" value="0.4"/>
+        </level>
+    </factor>
+    <factor id="airQuality">
+        <level id="critical" upperThreshold="0.1">
+            <weight id="totalTime" value="0.1"/>
+            <weight id="walkingTime" value="0.8"/>
+            <weight id="probOfSuccess" value="0.1"/>
+        </level>
+        <level id="bad" upperThreshold="0.3">
+            <weight id="totalTime" value="0.25"/>
+            <weight id="walkingTime" value="0.5"/>
+            <weight id="probOfSuccess" value="0.25"/>
+        </level>
+        <level id="moderate" upperThreshold="0.6">
+            <weight id="totalTime" value="0.33"/>
+            <weight id="walkingTime" value="0.33"/>
+            <weight id="probOfSuccess" value="0.33"/>
+        </level>
+        <level id="good" upperThreshold="1.0">
+            <weight id="totalTime" value="0.35"/>
+            <weight id="walkingTime" value="0.3"/>
+            <weight id="probOfSuccess" value="0.35"/>
         </level>
     </factor>
 </weights>

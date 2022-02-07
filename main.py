@@ -10,6 +10,7 @@ from tabulate import tabulate
 from parking_advisor import ParkingAdvisor
 from time_controller import TimeController
 from logger import Logger
+from environment import Environment
 from constants import *
 
 
@@ -23,6 +24,8 @@ else:
 sumocfg_path = os.path.join(sumo_rel_path, config_subdir, sumocfg_filename)
 users_file = os.path.join(sumo_rel_path, config_subdir, users_conf_filename)
 parkings_file = os.path.join(sumo_rel_path, gen_subdir, parkings_gen_filename)
+
+table_style = 'pretty'
 
 
 def suggestion_pos(suggested_targets, true_target):
@@ -53,8 +56,30 @@ def evaluate_target_suggestions(guided_veh, true_target, suggested_targets, advi
         headers = ['Component', 'True target', 'First suggestion']
         table = [[comp, conf_components_true[comp], conf_components_first[comp]] for comp in conf_components_first]
         table.append(['Overall', sum(conf_components_true.values()), sum(conf_components_first.values())])
-        logger.log(tabulate(table, headers))
+        logger.log(tabulate(table, headers, tablefmt=table_style))
         logger.log('')
+
+
+def log_weights_summary(logger, parking_advisor):
+    logger.log('Context:')
+    logger.log(tabulate(parking_advisor.context.items(), headers=['Feature', 'Value'], tablefmt=table_style))
+
+    weights = [[parking_advisor.weight_time, parking_advisor.weight_walking, parking_advisor.weight_prob]]
+    headers = ['Total time', 'Walking time', 'Prob of success']
+
+    logger.log('\nWeights:')
+    logger.log(tabulate(weights, headers, tablefmt=table_style))
+
+    logger.log('')
+
+
+def log_costs_summary(logger, parking_advisor, parking_areas):
+    logger.log('\nCosts:')
+    
+    headers = ['Parking area', 'Time total', 'Time walking', 'Prob of success', 'Total Cost']
+    costs = [[parking_area, *parking_advisor.costs[parking_area]] for parking_area in parking_areas]
+    logger.log(tabulate(costs, headers=headers, tablefmt=table_style))
+    logger.log('')
 
 
 def read_true_target(vehicle, users):
@@ -73,6 +98,8 @@ def guide_vehicles(advisor, users, parking_tree, gui, logger):
         evaluate_target_suggestions(guided_veh, true_target, suggested_targets, advisor, logger)
 
         parking_areas = advisor.pick_parking_areas(guided_veh, true_target)
+        log_weights_summary(logger, advisor)
+        log_costs_summary(logger, advisor, parking_areas)
         for parking_area in parking_areas:
             parking_area_elem = parking_tree.xpath(f'./parkingArea[@id="{parking_area}"]')[0]
             traci.vehicle.setVia(guided_veh, parking_area_elem.attrib['lane'].split('_')[0])
@@ -100,7 +127,9 @@ def guide_vehicles(advisor, users, parking_tree, gui, logger):
 @click.option('-d', '--day', default=1, help='Day of week at which simulation starts (1-7).')
 @click.option('-t', '--time', default='00:00:00', help='Time at which simulation starts, in format hh:mm:ss.')
 @click.option('--clear', default=False, is_flag=True, help='Cleares users history and stored simulation time.')
-def main(gui, quiet, output, continue_, week, day, time, clear):
+@click.option('--weather', default=None, type=float, help='Weather conditions in simulation run (float from [0.,1.], 0 - terrible weather, 1 - perfect weather).')
+@click.option('--air-quality', default=None, type=float, help='Air quality in simulation run (float from [0.,1.], 0 - terrible quality, 1 - perfect quality).')
+def main(gui, quiet, output, continue_, week, day, time, clear, weather, air_quality):
     if gui:
         traci.start(['sumo-gui', '-c', sumocfg_path])
     else:
@@ -110,7 +139,8 @@ def main(gui, quiet, output, continue_, week, day, time, clear):
     parking_tree = ET.parse(parkings_file)
 
     time_controller = TimeController(continue_, week, day, time)
-    advisor = ParkingAdvisor(time_controller)
+    environment = Environment(weather, air_quality)
+    advisor = ParkingAdvisor(time_controller, environment)
     logger = Logger(quiet, output)
     step = 0
 

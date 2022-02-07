@@ -25,10 +25,11 @@ language plpgsql
 as $$
 begin
     return query
-    select distinct p.id, target_point <-> ST_Transform(w.the_geom, 2178) as dist 
+    select p.id, min(target_point <-> ST_Transform(w.the_geom, 2178)) as dist 
     from parkings p 
-        join ways w on p.road_id = w.osm_id 
-    order by target_point <-> ST_Transform(w.the_geom, 2178) 
+        join ways w on p.road_id = w.osm_id
+    group by p.id
+    order by dist
     limit n;
 end; $$;
 

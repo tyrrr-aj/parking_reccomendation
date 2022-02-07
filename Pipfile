@@ -9,7 +9,6 @@ lxml = "*"
 psycopg2 = "*"
 python-dateutil = "*"
 tabulate = "*"
-scipy = "*"
 
 [dev-packages]
 
