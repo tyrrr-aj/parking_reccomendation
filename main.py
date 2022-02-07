@@ -4,6 +4,7 @@ import traci
 from traci.exceptions import FatalTraCIError, TraCIException
 from lxml import etree as ET
 import click
+from tabulate import tabulate
 
 
 from parking_advisor import ParkingAdvisor
@@ -24,9 +25,36 @@ users_file = os.path.join(sumo_rel_path, config_subdir, users_conf_filename)
 parkings_file = os.path.join(sumo_rel_path, gen_subdir, parkings_gen_filename)
 
 
-def evaluate_target_suggestions(true_target, suggested_targets, logger):
-    # based on position (and presence) of true target on propositions list, may be logged or printed
-    logger.log(f'suggested: {suggested_targets}\n true: {true_target}')
+def suggestion_pos(suggested_targets, true_target):
+    if true_target not in suggested_targets:
+        return 'not suggested'
+    
+    pos = suggested_targets.index(true_target) + 1
+    if pos == 1:
+        return '1st suggestion'
+    elif pos == 2:
+        return '2nd suggestion'
+    elif pos == 3:
+        return '3rd suggestion'
+    else:
+        return f'{pos}th suggestion'
+
+
+def evaluate_target_suggestions(guided_veh, true_target, suggested_targets, advisor, logger):
+    logger.log(f'\n{"=" * 15} User {(guided_veh.split("_")[0][3:])} activated application {"=" * 15}')
+    logger.log(f'suggested: {suggested_targets}')
+    logger.log(f'true: {true_target} ({suggestion_pos(suggested_targets, true_target)})\n')
+
+    if suggested_targets:
+        conf_components_first = advisor.confidence_components(suggested_targets[0])
+        conf_components_true = advisor.confidence_components(true_target)
+        logger.log('Confidence components:')
+
+        headers = ['Component', 'True target', 'First suggestion']
+        table = [[comp, conf_components_true[comp], conf_components_first[comp]] for comp in conf_components_first]
+        table.append(['Overall', sum(conf_components_true.values()), sum(conf_components_first.values())])
+        logger.log(tabulate(table, headers))
+        logger.log('')
 
 
 def read_true_target(vehicle, users):
@@ -42,7 +70,7 @@ def guide_vehicles(advisor, users, parking_tree, gui, logger):
         
         suggested_targets = advisor.suggest_targets(guided_veh)
         true_target = read_true_target(guided_veh, users)
-        evaluate_target_suggestions(true_target, suggested_targets, logger)
+        evaluate_target_suggestions(guided_veh, true_target, suggested_targets, advisor, logger)
 
         parking_areas = advisor.pick_parking_areas(guided_veh, true_target)
         for parking_area in parking_areas:
@@ -56,12 +84,11 @@ def guide_vehicles(advisor, users, parking_tree, gui, logger):
             except TraCIException:
                 pass
         else:
-            logger.log(f'WARNING: Failed to send vehicle {guided_veh} to applicable parking area')
+            logger.log(f'WARNING: Failed to send vehicle {guided_veh} to applicable parking area\n')
 
     if gui and new_guided_vehicle_ids:
         traci.gui.trackVehicle('View #0', new_guided_vehicle_ids[0])
         traci.gui.setZoom('View #0', 1000)
-        # sleep(1)
 
 
 @click.command()
@@ -77,7 +104,7 @@ def main(gui, quiet, output, continue_, week, day, time, clear):
     if gui:
         traci.start(['sumo-gui', '-c', sumocfg_path])
     else:
-        traci.start(['sumo', '-c', sumocfg_path])
+        traci.start(['sumo', '-c', sumocfg_path, '--no-warnings'])
 
     users = ET.parse(users_file)
     parking_tree = ET.parse(parkings_file)
@@ -90,6 +117,7 @@ def main(gui, quiet, output, continue_, week, day, time, clear):
     if clear:
         advisor.clear_user_history()
         time_controller.clear_stored_time()
+        logger.clear_log()
 
     try:
         while traci.simulation.getMinExpectedNumber() > 0:

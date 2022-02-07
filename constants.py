@@ -47,10 +47,11 @@ gen_subdir = 'generated'
 sumocfg_filename = 'agh.sumocfg'
 
 users_conf_filename = 'users.xml'
+weights_filename = 'weights.xml'
 
 parkings_gen_filename = 'parkings.add.xml'
 net_gen_filename = 'osm.net.xml'
 users_trips_filename = 'users.trips.xml'
 all_trips_gen_filename = 'agh.random.trips.xml'
 buildings_filename = 'buildings.xml'
-
+map_filename = 'agh_bbox.osm.xml'

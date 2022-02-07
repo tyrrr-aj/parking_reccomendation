@@ -1,7 +1,7 @@
 from math import exp, sqrt
-from functools import reduce
 import math
-import random
+from functools import reduce
+from scipy import stats
 import traci
 from traci.exceptions import FatalTraCIError, TraCIException
 from lxml import etree as ET
@@ -17,15 +17,15 @@ weights_file = os.path.join(sumo_rel_path, config_subdir, weights_filename)
 users_file = os.path.join(sumo_rel_path, config_subdir, users_conf_filename)
 
 
-def gaussian(x, mean=0.0, sd=(POS_TIME_DELTA_SEC - NEG_TIME_DELTA_SEC) / 3):
+def gaussian(x, mean=0.0, sd=max(POS_TIME_DELTA_SEC, NEG_TIME_DELTA_SEC) / 3):
     var = float(sd)**2
     denom = (2*math.pi*var)**.5
-    num = math.exp(-(float(x)-float(mean))**2/(2*var))
-    return num/denom
+    num = exp(-(float(x)-float(mean))**2/(2*var))
+    return num/denom * 3000
 
 
 def sigmoid(x):
-    return 1 / (1 + exp(-x + 4))
+    return 1 / (1 + exp(-x*4 + 4))
 
 
 def sigmoid_star(x):
@@ -51,6 +51,7 @@ class ParkingAdvisor:
             'frequent_targets': self._get_frequent_targets(vehicle),
             'repeating_targets': self._get_repeating_targets(vehicle)
         }
+        self._last_target_sets = target_sets
 
         targets = {target for target_set in target_sets.values() for target in (target_set.keys() if type(target_set) == dict else [t[0] for t in target_set])}
         
@@ -187,8 +188,17 @@ class ParkingAdvisor:
         return conf
 
 
+    def confidence_components(self, target):
+        return {
+            'nearby': self._confidence_nearby(target, self._last_target_sets['nearby_targets']),
+            'calendar': self._confidence_calendar(target, self._last_target_sets['calendar_targets']),
+            'frequent': self._confidence_frequent(target, self._last_target_sets['frequent_targets']),
+            'repeating': self._confidence_repeating(target, self._last_target_sets['repeating_targets'])
+        }
+
+
     def _confidence_nearby(self, target, target_set):
-        conf = BASE_CONF_NEARBY * target_set[target] if target in target_set else 0.0
+        conf = BASE_CONF_NEARBY * target_set[target] / MAX_DIST_NEARBY_METERS if target in target_set else 0.0
         # print(f'conf_n: {conf}')
         return conf
 
@@ -201,14 +211,14 @@ class ParkingAdvisor:
 
 
     def _confidence_frequent(self, target, target_set):
-        conf = BASE_CONF_FREQUENT * sigmoid(sum([sigmoid_star(self._time_controller.curr_global_time() - t[1]) for t in target_set if t == target]))
+        conf = BASE_CONF_FREQUENT * sigmoid(sum([sigmoid_star(self._time_controller.curr_global_time() - absolute_time) for tar, absolute_time in target_set if tar == target]))
         # print(f'conf_f: {conf}')
         return conf
 
 
     def _confidence_repeating(self, target, target_set):
         eta = self._time_controller.time_of_week_from_sim(self._eta(target))
-        conf = BASE_CONF_REPEATING * sigmoid(sum([sqrt(sigmoid_star(self._time_controller.curr_global_time() - t[2]) * gaussian(eta - t[1])) for t in target_set if t == target]))
+        conf = BASE_CONF_REPEATING * sigmoid(sum([sqrt(sigmoid_star(self._time_controller.curr_global_time() - absolute_time) * gaussian(eta - time_of_week)) for tar, time_of_week, absolute_time in target_set if tar == target]))
         # print(f'conf_r: {conf}')
         return conf
 
