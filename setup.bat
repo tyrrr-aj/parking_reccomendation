@@ -1,5 +1,5 @@
-docker run -d -p 5432:5432 --name parking-rec tyrrr/parking_recommendation_db
-docker run --name agh_map_loader tyrrr/agh_map_loader:deployment
+docker run -d -p 5432:5432 --name parking-rec tyrrr/parking_recommendation_db:latest
+docker run --name agh_map_loader tyrrr/parking_recommendation_map_loader:latest
 docker stop agh_map_loader
 docker stop parking-rec
 
