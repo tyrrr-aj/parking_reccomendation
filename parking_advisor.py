@@ -395,12 +395,14 @@ class ParkingAdvisor:
         # length_diff = ...
         # width_diff = ...
         # n_free_spots_nearby = ...
+        time_driving = self._get_time_driving(parking_area)
 
-
-        sigmoid = lambda x, c: c * (1 / (1 + math.exp(-x / 5)) - 0.5)
+        sigmoid_free_spots = lambda x, c: c * (1 / (1 + exp(-x / 5)) - 0.5)
+        sigmoid_time_driving = lambda x: 2 / (1 + exp(x / MAX_TIME_DRIVING / 4))
 
         factors = [
-            sigmoid(n_free_spots, COEF_FREE_SPACE)
+            sigmoid_free_spots(n_free_spots, COEF_FREE_SPACE),
+            sigmoid_time_driving(time_driving)
         ]
         return sum(factors) / len(factors)
 
