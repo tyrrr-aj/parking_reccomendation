@@ -55,3 +55,8 @@ users_trips_filename = 'users.trips.xml'
 all_trips_gen_filename = 'agh.random.trips.xml'
 buildings_filename = 'buildings.xml'
 map_filename = 'agh_bbox.osm.xml'
+
+
+# ====================================================================
+# Database:
+conn_string = "dbname=agh user=postgres password=letMEin!"

@@ -144,7 +144,7 @@ def add_stops_to_random_trips(trips_tree, output_tree):
 
 def add_parkings_to_db(output_tree):
     try:
-        conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+        conn = psycopg2.connect(conn_string)
         cur = conn.cursor()
 
         sql = 'INSERT INTO parkings(id, road_id) VALUES(%s, %s)'

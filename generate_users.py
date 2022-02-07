@@ -99,7 +99,7 @@ def fill_random_calendar(calendar):
 
 def find_parking_area(target):
     try:
-        conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+        conn = psycopg2.connect(conn_string)
         cur = conn.cursor()
 
         sql = 'select id from get_parkings_around_building(%s, %s)'

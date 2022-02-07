@@ -16,7 +16,7 @@ def get_buildings():
 
 def load_buildings_to_db(buildings):
     try:
-        conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+        conn = psycopg2.connect(conn_string)
         cur = conn.cursor()
 
         sql = 'DELETE FROM buildings; '

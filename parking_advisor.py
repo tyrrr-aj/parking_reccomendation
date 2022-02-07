@@ -72,7 +72,7 @@ class ParkingAdvisor:
     def _eta(self, building):
         if building not in self._eta_cache:            
             try:
-                conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+                conn = psycopg2.connect(conn_string)
                 cur = conn.cursor()
 
                 sql = 'select estimated_travel_time from estimated_travel_time(%s, %s, %s);'
@@ -101,7 +101,7 @@ class ParkingAdvisor:
 
     def _get_nearby_targets(self):
         try:
-            conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+            conn = psycopg2.connect(conn_string)
             cur = conn.cursor()
 
             sql = 'select building, distance from get_nearby_buildings(%s, %s, %s);'
@@ -134,7 +134,7 @@ class ParkingAdvisor:
 
     def _get_frequent_targets(self, vehicle):    
         try:
-            conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+            conn = psycopg2.connect(conn_string)
             cur = conn.cursor()
 
             sql = 'select building, absolute_time from user_history where user_id = %s;'
@@ -157,7 +157,7 @@ class ParkingAdvisor:
 
     def _get_repeating_targets(self, vehicle):
         try:
-            conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+            conn = psycopg2.connect(conn_string)
             cur = conn.cursor()
 
             sql = 'select building, time_of_week, absolute_time from get_events_within_timeframe(%s, %s, %s, %s, %s, %s, %s);'
@@ -264,7 +264,7 @@ class ParkingAdvisor:
         n_parking_lots = 10
 
         try:
-            conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+            conn = psycopg2.connect(conn_string)
             cur = conn.cursor()
 
             sql = 'select id from get_parkings_around_building(%s, %s)'
@@ -358,7 +358,7 @@ class ParkingAdvisor:
 
     def _save_user_target(self, vehicle, target):
         try:
-            conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+            conn = psycopg2.connect(conn_string)
             cur = conn.cursor()
 
             sql = 'INSERT INTO user_history VALUES(%s, %s, %s, %s)'
@@ -381,7 +381,7 @@ class ParkingAdvisor:
 
     def clear_user_history(self):
         try:
-            conn = psycopg2.connect("dbname=agh user=postgres password=letMEin!")
+            conn = psycopg2.connect(conn_string)
             cur = conn.cursor()
 
             sql = 'DELETE FROM user_history'
