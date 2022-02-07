@@ -23,6 +23,6 @@ RUN mkdir data conf
 COPY ./data/* /data/
 COPY ./conf/* /conf/
 
-CMD ["osm2pgrouting", "--f", "/data/agh_bbox.osm.xml", "--conf", "/conf/mapconfig.xml", "--dbname", "agh", "--username", "postgres", "--password", "letMEin!", "--clean"]
+CMD ["osm2pgrouting", "--f", "/data/agh_bbox.osm.xml", "--conf", "/conf/mapconfig.xml", "--host", "host.docker.internal", "--dbname", "agh", "--username", "postgres", "--password", "letMEin!", "--clean"]
 
 #ENTRYPOINT [ "osm2pgrouting --f data/Cracow.osm --conf /conf/mapconfig.xml --dbname osm --username postgres --password letMEin! --clean" ]

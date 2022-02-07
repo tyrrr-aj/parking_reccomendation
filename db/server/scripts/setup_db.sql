@@ -1,4 +1,35 @@
-create table parkings(id varchar(50) primary key, road_id bigint references ways(osm_id));
+CREATE EXTENSION POSTGIS;
+CREATE EXTENSION PGROUTING;
+
+create table ways(
+    gid bigint,
+    osm_id bigint,
+    tag_id integer,
+    length double precision,
+    length_m double precision,
+    name text,
+    source bigint,
+    target bigint,
+    source_osm bigint,
+    target_osm bigint,
+    cost double precision,
+    reverse_cost double precision,
+    cost_s double precision,
+    reverse_cost_s double precision,
+    rule text,
+    one_way integer,
+    oneway text,
+    x1 double precision,
+    y1 double precision,
+    x2 double precision,
+    y2 double precision,
+    maxspeed_forward double precision,
+    maxspeed_backward double precision,
+    priority double precision,
+    the_geom geometry(LineString,4326)
+);
+
+create table parkings(id varchar(50) primary key, road_id);
 
 create table buildings(
     name varchar(10) primary key, 

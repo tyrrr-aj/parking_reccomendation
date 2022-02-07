@@ -1,5 +1,6 @@
-FROM postgis/postgis
+FROM pgrouting/pgrouting:latest
 
-COPY ./scritps/setup_db.sql /
-RUN psql -U postgres -c 'create database agh;' \
-    && psql -U postgres -d agh -a -f /setup_db.sql
+ENV POSTGRES_DB agh
+ENV POSTGRES_PASSWORD letMEin!
+
+COPY ./scripts/* /docker-entrypoint-initdb.d/
