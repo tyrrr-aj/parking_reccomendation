@@ -318,17 +318,76 @@ class ParkingAdvisor:
         time_total = self._get_time_total(parking_area, target, vehicle)
         time_walking = self._get_time_walking(parking_area, target)
         prob_of_success = self._get_prob_of_success(parking_area, vehicle)
+        print(f'\nParking area {parking_area}:')
+        print(f'time_total: {time_total}')
+        print(f'time_walking: {time_walking}')
+        print(f'prob_of_success: {prob_of_success}')
         return self._weight_time * min(time_total / MAX_TIME_TOTAL, 1.) + \
                self._weight_walking * min(time_walking / MAX_TIME_WALKING, 1.) + \
                self._weight_prob * prob_of_success
 
     
     def _get_time_total(self, parking_area, target, vehicle):
-        return 0
+        try:
+            conn = psycopg2.connect(conn_string)
+            cur = conn.cursor()
+
+            sql = 'select estimated_total_time(%s, %s, %s, %s)'
+            cur.execute(sql, (parking_area, target, *self._loc))
+            time_total = cur.fetchall()[0][0]
+            
+            conn.commit()
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            time_total = MAX_TIME_TOTAL
+        finally:
+            if conn is not None:
+                conn.close()
+
+        return time_total
 
     
     def _get_time_walking(self, parking_area, target):
-        return 0
+        try:
+            conn = psycopg2.connect(conn_string)
+            cur = conn.cursor()
+
+            sql = 'select estimated_walking_time(%s, %s)'
+            cur.execute(sql, (parking_area, target))
+            time_walking = cur.fetchall()[0][0]
+            
+            conn.commit()
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            time_walking = MAX_TIME_WALKING
+        finally:
+            if conn is not None:
+                conn.close()
+
+        return time_walking
+
+
+    def _get_time_driving(self, parking_area):
+        try:
+            conn = psycopg2.connect(conn_string)
+            cur = conn.cursor()
+
+            sql = 'select estimated_walking_time(%s, %s, %s)'
+            cur.execute(sql, (parking_area, *self._loc))
+            time_driving = cur.fetchall()[0][0]
+            
+            conn.commit()
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            time_driving = MAX_TIME_DRIVING
+        finally:
+            if conn is not None:
+                conn.close()
+
+        return time_driving
 
 
     def _get_prob_of_success(self, parking_area, vehicle):
@@ -336,6 +395,7 @@ class ParkingAdvisor:
         # length_diff = ...
         # width_diff = ...
         # n_free_spots_nearby = ...
+
 
         sigmoid = lambda x, c: c * (1 / (1 + math.exp(-x / 5)) - 0.5)
 

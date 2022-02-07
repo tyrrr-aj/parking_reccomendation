@@ -1,16 +1,19 @@
-create table parkings(id varchar(50), road_id bigint);
+create table parkings(id varchar(50) primary key, road_id bigint references ways(osm_id));
+
 create table buildings(
     name varchar(10) primary key, 
     lon float, 
     lat float, 
     geom geometry generated always as (ST_TRANSFORM(ST_SetSRID(ST_Point(lon, lat), 4326), 2178)) stored
-    );
+);
+
 create table user_history(
     user_id varchar(5), 
     building varchar(10) references buildings(name), 
     time_of_week integer, 
     absolute_time bigint, 
-    primary key (user_id, absolute_time));
+    primary key (user_id, absolute_time)
+);
 
 
 create or replace function get_parkings_around_point(target_point geometry, n int)
@@ -22,7 +25,7 @@ language plpgsql
 as $$
 begin
     return query
-    select p.id, target_point <-> ST_Transform(w.the_geom, 2178) as dist 
+    select distinct p.id, target_point <-> ST_Transform(w.the_geom, 2178) as dist 
     from parkings p 
         join ways w on p.road_id = w.osm_id 
     order by target_point <-> ST_Transform(w.the_geom, 2178) 
@@ -134,4 +137,85 @@ begin
         'select gid as id, source, target, cost_s as cost, reverse_cost_s as reverse_cost from ways', vertex_near_loc, vertex_near_building);
 
     return estimated_time;
+end; $$;
+
+
+create or replace function estimated_driving_time(parking varchar(50), lon float, lat float)
+returns integer
+language plpgsql
+as $$
+declare
+    loc geometry = ST_SetSRID(ST_Point(lon, lat), 4326);
+    parking_loc geometry;
+    vertex_near_loc int;
+    vertex_near_parking int;
+    estimated_time float;
+begin
+    select ST_Transform(w.the_geom, 4326) into parking_loc
+    from parkings p
+        join ways w on p.road_id = w.osm_id 
+    where p.id = parking;
+
+    select id into vertex_near_loc
+    from ways_vertices_pgr 
+    order by loc <-> the_geom 
+    limit 1;
+
+    select id into vertex_near_parking
+    from ways_vertices_pgr
+    order by parking_loc <-> the_geom 
+    limit 1;
+
+    select agg_cost into estimated_time
+    from pgr_dijkstraCost(
+        'select gid as id, source, target, cost_s as cost, reverse_cost_s as reverse_cost from ways', vertex_near_loc, vertex_near_parking);
+
+    return estimated_time;
+end; $$;
+
+
+create or replace function estimated_walking_time(parking varchar(50), building varchar(10))
+returns integer
+language plpgsql
+as $$
+declare
+    building_loc geometry;
+    parking_loc geometry;
+    vertex_near_building int;
+    vertex_near_parking int;
+    estimated_time float;
+begin
+    select ST_Transform(w.the_geom, 4326) into parking_loc
+    from parkings p
+        join ways w on p.road_id = w.osm_id 
+    where p.id = parking;
+
+    select ST_Transform(geom, 4326) into building_loc
+    from buildings 
+    where name = building;
+
+    select id into vertex_near_building
+    from ways_vertices_pgr 
+    order by building_loc <-> the_geom 
+    limit 1;
+
+    select id into vertex_near_parking
+    from ways_vertices_pgr
+    order by parking_loc <-> the_geom 
+    limit 1;
+
+    select agg_cost into estimated_time
+    from pgr_dijkstraCost(
+        'select gid as id, source, target, length_m / 1.5 as cost, length_m / 1.5 as reverse_cost from ways', vertex_near_parking, vertex_near_building);
+
+    return estimated_time;
+end; $$;
+
+
+create or replace function estimated_total_time(parking varchar(50), building varchar(10), lon float, lat float)
+returns integer
+language plpgsql
+as $$
+begin
+    return estimated_driving_time(parking, lon, lat) + estimated_walking_time(parking, building);
 end; $$;
