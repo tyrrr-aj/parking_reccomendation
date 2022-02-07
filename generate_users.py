@@ -3,8 +3,9 @@ from lxml import etree as ET
 import xml.dom.minidom
 import random
 import psycopg2
+import click
 
-from parking_generator import save_output
+from generate_parkings import save_output
 from constants import *
 
 
@@ -208,17 +209,31 @@ def prepare_users_trips(users_tree, users_trips_tree):
     users_trips_tree[:] = sorted(users_trips_tree, key=lambda trip: float(trip.attrib['depart']) if trip.tag == 'trip' else 0.0)
 
 
-def main():
+@click.command()
+def generate():
     users_tree = xml_root('users')
-    users_trips_tree = ET.parse(trips_file).find('.')
-    
     generate_users(users_tree)
     save_output(users_tree, output_users_file)
+
+
+@click.command()
+def load():
+    users_tree = ET.parse(output_users_file)
+    users_trips_tree = ET.parse(trips_file).find('.')
 
     add_guided_v_type(users_trips_tree)
     prepare_users_trips(users_tree, users_trips_tree)
     save_output(users_trips_tree, trips_file)
 
 
+@click.group()
+def cli():
+    pass
+
+
+cli.add_command(generate)
+cli.add_command(load)
+
+
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(cli())

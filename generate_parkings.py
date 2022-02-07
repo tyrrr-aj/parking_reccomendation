@@ -3,6 +3,7 @@ from lxml import etree as ET
 import xml.dom.minidom
 import random
 import psycopg2
+import click
 
 
 from constants import *
@@ -173,25 +174,41 @@ def pick_guided_vehicles(trips_tree):
             guided_trip.remove(stop)
 
 
-def main():
+@click.command()
+def extract():
     output_tree = output_core()
     input_tree = ET.parse(input_file)
     net_tree = ET.parse(net_file)
-    trips_tree = ET.parse(random_trips_file)
 
     add_parkings_along_roads(input_tree, net_tree, output_tree)
     add_standalone_parkings(input_tree, net_tree, output_tree)
     add_parkings_along_aisles(input_tree, net_tree, output_tree)
 
-    add_parkings_to_db(output_tree)
-    
-    # add_guided_v_type(trips_tree)
-    add_stops_to_random_trips(trips_tree, output_tree)
-    # pick_guided_vehicles(trips_tree)
-
     save_output(output_tree)
+
+
+@click.command()
+def load():
+    trips_tree = ET.parse(random_trips_file)
+    output_tree = ET.parse(output_file)
+
+    add_stops_to_random_trips(trips_tree, output_tree)
+
+    add_parkings_to_db(output_tree)
+
+    # add_guided_v_type(trips_tree)
+    # pick_guided_vehicles(trips_tree)
     save_output(trips_tree, output=random_trips_file)
 
 
+@click.group()
+def cli():
+    pass
+
+
+cli.add_command(extract)
+cli.add_command(load)
+
+
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(cli())

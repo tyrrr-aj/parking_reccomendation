@@ -200,7 +200,7 @@ class ParkingAdvisor:
 
 
     def _confidence_nearby(self, target, target_set):
-        return BASE_CONF_NEARBY * target_set[target] / MAX_DIST_NEARBY_METERS if target in target_set else 0.0
+        return BASE_CONF_NEARBY * (1. - target_set[target] / MAX_DIST_NEARBY_METERS) if target in target_set else 0.0
 
 
     def _confidence_calendar_single(self, eta_time_of_week, time_of_week):
@@ -359,7 +359,7 @@ class ParkingAdvisor:
         prob_of_success = self._get_prob_of_success(parking_area, vehicle)
         total = self.weight_time * min(time_total / MAX_TIME_TOTAL, 1.) + \
                self.weight_walking * min(time_walking / MAX_TIME_WALKING, 1.) + \
-               self.weight_prob * prob_of_success
+               self.weight_prob * (1 - prob_of_success)
 
         self.costs[parking_area] = (time_total, time_walking, prob_of_success, total)
         return total
@@ -435,7 +435,7 @@ class ParkingAdvisor:
         # n_free_spots_nearby = ...
         time_driving = self._get_time_driving(parking_area)
 
-        sigmoid_free_spots = lambda x, c: c * (1 / (1 + exp(-x / 5)) - 0.5)
+        sigmoid_free_spots = lambda x, c: 1 - (c * (1 / (1 + exp(-x / 5)) - 0.5))
         sigmoid_time_driving = lambda x: 2 / (1 + exp(x / MAX_TIME_DRIVING / 4))
 
         factors = [

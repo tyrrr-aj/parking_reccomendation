@@ -98,6 +98,7 @@ def guide_vehicles(advisor, users, parking_tree, gui, logger):
         evaluate_target_suggestions(guided_veh, true_target, suggested_targets, advisor, logger)
 
         parking_areas = advisor.pick_parking_areas(guided_veh, true_target)
+
         log_weights_summary(logger, advisor)
         log_costs_summary(logger, advisor, parking_areas)
         for parking_area in parking_areas:
@@ -111,7 +112,7 @@ def guide_vehicles(advisor, users, parking_tree, gui, logger):
             except TraCIException:
                 pass
         else:
-            logger.log(f'WARNING: Failed to send vehicle {guided_veh} to applicable parking area\n')
+            logger.log(f'WARNING: Failed to send vehicle {guided_veh} to applicable parking area\n')        
 
     if gui and new_guided_vehicle_ids:
         traci.gui.trackVehicle('View #0', new_guided_vehicle_ids[0])
